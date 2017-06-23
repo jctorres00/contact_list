@@ -1,0 +1,39 @@
+postgres:
+    image: postgres:9.4.5
+    environment:
+        POSTGRES_USER: contact_list
+        POSTGRES_PASSWORD: yourpassword
+    ports:
+        - '5432:5432'
+    volumes:
+            - contact_list-postgres:/var/lib/postgresql/data
+
+redis:
+    image: redis:3.0.5
+    ports:
+        - '6379:6379'
+    volumes:
+        - contact_list-redis:/var/lib/redis/data
+
+contact_list:
+    build: .
+    links:
+        - postgres
+        - redis
+    volumes:
+        - .:/contact_list
+    ports:
+        - '8000:8000'
+    env_file:
+        - .contact_list.env
+
+sidekiq:
+    build: .
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    links:
+        - postgres
+        - redis
+    volumes:
+        - .:/contact_list
+    env_file:
+        - .contact_list.env
