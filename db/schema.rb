@@ -11,9 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20170701024850) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "departments", force: :cascade do |t|
+    t.string   "name",       limit: 50
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "employees", force: :cascade do |t|
+    t.integer  "department_id"
+    t.string   "first_name",    limit: 50
+    t.string   "last_name",     limit: 50
+    t.string   "job_tittle",    limit: 50
+    t.string   "email",                    default: "", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
